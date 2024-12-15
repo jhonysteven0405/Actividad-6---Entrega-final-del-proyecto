@@ -1,0 +1,103 @@
+# Manual Técnico para la Implementación de un Prototipo de Guía Digital
+
+## Recolección de Requisitos
+# Ejemplo de código para recopilar datos mediante una encuesta en Python
+import json
+
+def recolectar_requisitos():
+    requisitos = []
+    while True:
+        requisito = input("Ingrese un requisito clave (o 'salir' para finalizar): ")
+        if requisito.lower() == 'salir':
+            break
+        requisitos.append(requisito)
+    with open('requisitos.json', 'w') as archivo:
+        json.dump(requisitos, archivo)
+    print("Requisitos guardados en 'requisitos.json'.")
+
+recolectar_requisitos()
+
+# Resultado: Archivo 'requisitos.json' con los datos recopilados.
+
+## Diseño Rápido
+# Código para generar wireframes simples usando Python y Tkinter
+import tkinter as tk
+
+def crear_wireframe():
+    ventana = tk.Tk()
+    ventana.title("Wireframe: Pantalla de Inicio")
+    ventana.geometry("400x300")
+
+    tk.Label(ventana, text="Bienvenido a la Guía Digital", font=("Arial", 16)).pack(pady=10)
+    tk.Button(ventana, text="Objetivos Estratégicos", width=30).pack(pady=5)
+    tk.Button(ventana, text="Progreso de Estrategias", width=30).pack(pady=5)
+    tk.Button(ventana, text="Salir", width=30, command=ventana.destroy).pack(pady=20)
+
+    ventana.mainloop()
+
+crear_wireframe()
+
+## Construcción del Prototipo Funcional
+# Código para implementar una función básica de creación de objetivos SMART
+objetivos = []
+
+def crear_objetivo_smart():
+    objetivo = {
+        "Específico": input("Especifique el objetivo: "),
+        "Medible": input("¿Cómo se medirá el progreso?: "),
+        "Alcanzable": input("¿Es alcanzable? (Sí/No): "),
+        "Relevante": input("¿Por qué es relevante?: "),
+        "Tiempo": input("¿Cuál es el tiempo límite para lograrlo?: ")
+    }
+    objetivos.append(objetivo)
+    print("Objetivo SMART creado con éxito.")
+
+crear_objetivo_smart()
+
+# Guardar los objetivos en un archivo
+with open('objetivos.json', 'w') as archivo:
+    json.dump(objetivos, archivo)
+
+print("Objetivos SMART guardados en 'objetivos.json'.")
+
+## Evaluación
+# Código para realizar evaluaciones básicas mediante retroalimentación
+
+def evaluar_prototipo():
+    retroalimentacion = []
+    for i in range(3):
+        comentario = input(f"Ingrese comentario {i+1} sobre el prototipo: ")
+        retroalimentacion.append(comentario)
+    with open('retroalimentacion.json', 'w') as archivo:
+        json.dump(retroalimentacion, archivo)
+    print("Retroalimentación guardada en 'retroalimentacion.json'.")
+
+evaluar_prototipo()
+
+## Refinamiento
+# Ajustar y optimizar la interfaz con funciones adicionales
+
+# Ejemplo de código para generar un informe en formato PDF
+from fpdf import FPDF
+
+def generar_informe():
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="Informe de Progreso", ln=True, align='C')
+    pdf.ln(10)
+
+    with open('objetivos.json', 'r') as archivo:
+        objetivos = json.load(archivo)
+        for idx, objetivo in enumerate(objetivos, start=1):
+            pdf.cell(0, 10, txt=f"Objetivo {idx}: {objetivo['Específico']}", ln=True)
+
+    pdf.output("informe_progreso.pdf")
+    print("Informe generado como 'informe_progreso.pdf'.")
+
+generar_informe()
+
+## Entrega
+# Presentación de resultados
+print("El prototipo funcional y la documentación han sido entregados con éxito.")
