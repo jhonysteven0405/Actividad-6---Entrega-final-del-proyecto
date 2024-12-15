@@ -1,0 +1,102 @@
+import json
+
+class StrategyManagementApp:
+    def __init__(self):
+        self.strategies = []
+        self.file_name = "strategies.json"
+
+    def load_strategies(self):
+        try:
+            with open(self.file_name, 'r') as file:
+                self.strategies = json.load(file)
+            print("Datos cargados exitosamente.")
+        except FileNotFoundError:
+            print("Archivo no encontrado. Comenzando con una lista vacía.")
+        except json.JSONDecodeError:
+            print("Error al leer el archivo JSON. Comenzando con una lista vacía.")
+
+    def save_strategies(self):
+        with open(self.file_name, 'w') as file:
+            json.dump(self.strategies, file, indent=4)
+        print("Datos guardados exitosamente.")
+
+    def add_strategy(self):
+        name = input("Ingrese el nombre de la estrategia: ")
+        description = input("Ingrese la descripción de la estrategia: ")
+        objectives = []
+        print("Ingrese los objetivos (deje vacío para terminar):")
+        while True:
+            objective = input("- ")
+            if objective == "":
+                break
+            objectives.append(objective)
+        progress = 0
+        strategy = {
+            "name": name,
+            "description": description,
+            "objectives": objectives,
+            "progress": progress
+        }
+        self.strategies.append(strategy)
+        print("Estrategia agregada exitosamente.")
+
+    def update_progress(self):
+        self.list_strategies()
+        index = int(input("Seleccione el número de la estrategia para actualizar su progreso: "))
+        if 0 <= index < len(self.strategies):
+            new_progress = int(input("Ingrese el nuevo progreso (%): "))
+            if 0 <= new_progress <= 100:
+                self.strategies[index]["progress"] = new_progress
+                print("Progreso actualizado exitosamente.")
+            else:
+                print("El progreso debe estar entre 0 y 100.")
+        else:
+            print("Índice inválido.")
+
+    def list_strategies(self):
+        if not self.strategies:
+            print("No hay estrategias disponibles.")
+            return
+        for i, strategy in enumerate(self.strategies):
+            print(f"{i}. {strategy['name']} - Progreso: {strategy['progress']}%")
+            print(f"   Descripción: {strategy['description']}")
+            print(f"   Objetivos: {', '.join(strategy['objectives'])}")
+
+    def generate_report(self):
+        print("Reporte de Estrategias:")
+        for strategy in self.strategies:
+            print("-" * 40)
+            print(f"Nombre: {strategy['name']}")
+            print(f"Descripción: {strategy['description']}")
+            print(f"Objetivos: {', '.join(strategy['objectives'])}")
+            print(f"Progreso: {strategy['progress']}%")
+        print("-" * 40)
+
+    def run(self):
+        self.load_strategies()
+        while True:
+            print("\n--- Gestión de Estrategias Organizacionales ---")
+            print("1. Agregar nueva estrategia")
+            print("2. Actualizar progreso de una estrategia")
+            print("3. Listar estrategias")
+            print("4. Generar reporte de estrategias")
+            print("5. Guardar y salir")
+            choice = input("Seleccione una opción: ")
+            if choice == "1":
+                self.add_strategy()
+            elif choice == "2":
+                self.update_progress()
+            elif choice == "3":
+                self.list_strategies()
+            elif choice == "4":
+                self.generate_report()
+            elif choice == "5":
+                self.save_strategies()
+                print("¡Gracias por usar la aplicación!")
+                break
+            else:
+                print("Opción inválida, intente de nuevo.")
+
+if __name__ == "__main__":
+    app = StrategyManagementApp()
+    app.run()
