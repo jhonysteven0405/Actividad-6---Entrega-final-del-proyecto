@@ -1,0 +1,116 @@
+import json
+from datetime import datetime
+
+class StrategyManagementApp:
+    def __init__(self):
+        self.objectives = []
+        self.progress_reports = []
+
+    def add_objective(self, title, description, due_date):
+        objective = {
+            'id': len(self.objectives) + 1,
+            'title': title,
+            'description': description,
+            'due_date': due_date,
+            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'progress': 0
+        }
+        self.objectives.append(objective)
+        print(f"Objective '{title}' added successfully.")
+
+    def update_progress(self, objective_id, progress):
+        for obj in self.objectives:
+            if obj['id'] == objective_id:
+                obj['progress'] = progress
+                print(f"Progress for '{obj['title']}' updated to {progress}%.")
+                return
+        print(f"Objective with ID {objective_id} not found.")
+
+    def add_progress_report(self, objective_id, report):
+        for obj in self.objectives:
+            if obj['id'] == objective_id:
+                progress_report = {
+                    'objective_id': objective_id,
+                    'objective_title': obj['title'],
+                    'report': report,
+                    'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+                self.progress_reports.append(progress_report)
+                print(f"Progress report for '{obj['title']}' added successfully.")
+                return
+        print(f"Objective with ID {objective_id} not found.")
+
+    def list_objectives(self):
+        print("\nObjectives:")
+        for obj in self.objectives:
+            print(f"[ID: {obj['id']}] {obj['title']} - {obj['progress']}% completed (Due: {obj['due_date']})")
+
+    def list_progress_reports(self):
+        print("\nProgress Reports:")
+        for report in self.progress_reports:
+            print(f"[Objective ID: {report['objective_id']}] {report['objective_title']} - {report['report']} (Timestamp: {report['timestamp']})")
+
+    def save_data(self, filename="data.json"):
+        data = {
+            'objectives': self.objectives,
+            'progress_reports': self.progress_reports
+        }
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
+        print(f"Data saved to {filename}.")
+
+    def load_data(self, filename="data.json"):
+        try:
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                self.objectives = data['objectives']
+                self.progress_reports = data['progress_reports']
+            print(f"Data loaded from {filename}.")
+        except FileNotFoundError:
+            print(f"No existing data file found ({filename}). Starting with empty data.")
+
+# Main application
+if __name__ == "__main__":
+    app = StrategyManagementApp()
+    app.load_data()
+
+    while True:
+        print("\n--- Strategy Management App ---")
+        print("1. Add Objective")
+        print("2. Update Progress")
+        print("3. Add Progress Report")
+        print("4. List Objectives")
+        print("5. List Progress Reports")
+        print("6. Save and Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            title = input("Enter objective title: ")
+            description = input("Enter objective description: ")
+            due_date = input("Enter due date (YYYY-MM-DD): ")
+            app.add_objective(title, description, due_date)
+
+        elif choice == "2":
+            objective_id = int(input("Enter objective ID: "))
+            progress = int(input("Enter progress percentage (0-100): "))
+            app.update_progress(objective_id, progress)
+
+        elif choice == "3":
+            objective_id = int(input("Enter objective ID: "))
+            report = input("Enter progress report: ")
+            app.add_progress_report(objective_id, report)
+
+        elif choice == "4":
+            app.list_objectives()
+
+        elif choice == "5":
+            app.list_progress_reports()
+
+        elif choice == "6":
+            app.save_data()
+            print("Exiting application. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
